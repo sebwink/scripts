@@ -1,0 +1,36 @@
+#!/bin/bash
+
+OPTIND=1
+
+RSTUDIO_VERSION=1.1.414
+RSTUDIO_INSTALL_ROOT=$HOME/tools/R/rstudio
+
+R_INSTALL_ROOT=$HOME/tools/R
+DEFAULT_R_VERSION=3.4.3
+
+R_VERSION=$DEFAULT_R_VERSION
+
+show_help() {
+	echo "Usage: rstudio [ -R R-Version ] (default: R-$DEFAULT_R_VERSION)"
+}
+
+while getopts "h?R:" opt; do
+	case "$opt" in
+		h|\?)
+			show_help
+			exit 0
+			;;
+		R)
+			R_VERSION="$OPTARG"
+	esac
+done
+
+RROOT=$R_INSTALL_ROOT/$R_VERSION
+if [ -d $RROOT/lib ]; then
+	LIBDIR=lib
+else
+	LIBDIR=lib64
+fi
+
+export RSTUDIO_WHICH_R="$R_INSTALL_ROOT/$R_VERSION/$LIBDIR/R/bin/R"
+$RSTUDIO_INSTALL_ROOT/$RSTUDIO_VERSION/bin/rstudio
